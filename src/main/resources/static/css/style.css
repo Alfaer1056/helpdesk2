@@ -1,0 +1,113 @@
+/* Неоновая тема - Neon Cyberpunk */
+:root {
+    --bg-dark: #0a0a0a;
+    --neon-cyan: #00f3ff;
+    --neon-pink: #ff00ff;
+    --neon-green: #39ff14;
+    --neon-yellow: #ffea00;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 100%);
+    color: #fff;
+    font-family: 'Courier New', monospace;
+}
+
+/* Навигация */
+.navbar {
+    background: rgba(0, 0, 0, 0.9) !important;
+    border-bottom: 2px solid var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+}
+
+.navbar-brand {
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+    animation: neonPulse 2s infinite;
+}
+
+@keyframes neonPulse {
+    0%, 100% { text-shadow: 0 0 10px var(--neon-cyan); }
+    50% { text-shadow: 0 0 20px var(--neon-cyan), 0 0 30px var(--neon-cyan); }
+}
+
+.nav-link {
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    text-shadow: 0 0 10px var(--neon-pink);
+    transform: translateX(5px);
+}
+
+/* Герой-секция */
+.hero-card {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid var(--neon-cyan);
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.hero-card h1 {
+    animation: neonPulse 2s infinite;
+}
+
+/* Карточки */
+.card {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--neon-green);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.card:hover {
+    transform: translateY(-10px) rotateX(5deg);
+    box-shadow: 0 0 30px rgba(57, 255, 20, 0.3);
+    border-color: var(--neon-pink);
+}
+
+.card-title {
+    color: var(--neon-green);
+    text-shadow: 0 0 5px var(--neon-green);
+}
+
+/* Кнопки */
+.btn-primary {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px var(--neon-pink);
+}
+
+/* Таблицы */
+.table {
+    color: #fff;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: rgba(0, 243, 255, 0.1);
+}
+
+.table th {
+    color: var(--neon-yellow);
+    border-color: var(--neon-cyan);
+}
+
+/* Alert */
+.alert-info {
+    background: rgba(0, 243, 255, 0.1);
+    border: 1px solid var(--neon-cyan);
+    color: #fff;
+    border-radius: 10px;
+}
