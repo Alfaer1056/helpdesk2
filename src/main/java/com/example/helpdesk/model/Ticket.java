@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "tickets")
+//osnova
 public class Ticket {
 
     @Id
