@@ -1,45 +1,53 @@
 package com.example.helpdesk.controller;
 
-import com.example.helpdesk.model.TicketStatus;
-import com.example.helpdesk.repository.TicketRepository;
+import com.example.helpdesk.dto.TicketCreateDto;
+import com.example.helpdesk.model.Ticket;
+import com.example.helpdesk.service.TicketService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequestMapping("/tickets")
 public class TicketController {
 
-    private final TicketRepository ticketRepository;
+    private final TicketService ticketService;
 
-    public TicketController(TicketRepository ticketRepository) {
-        this.ticketRepository = ticketRepository;
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 
-    @GetMapping("/tickets")
-    public String tickets(Model model) {
-        model.addAttribute("tickets", ticketRepository.findAllByOrderByCreatedAtDesc());
-        model.addAttribute("pageTitle", "Список заявок");
+    @GetMapping
+    public String showTickets(Model model) {
+        model.addAttribute("tickets", ticketService.getAllTickets());
         return "tickets";
     }
 
-    @GetMapping("/tickets/new")
-    public String newTickets(Model model) {
-        model.addAttribute("tickets", ticketRepository.findByStatus(TicketStatus.NEW));
-        model.addAttribute("pageTitle", "Новые заявки");
-        return "tickets";
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("ticket", new TicketCreateDto());
+        return "ticket-form";
     }
 
-    @GetMapping("/tickets/search")
-    public String searchTickets(@RequestParam(required = false) String customerName, Model model) {
-        if (customerName != null && !customerName.isEmpty()) {
-            model.addAttribute("tickets",
-                    ticketRepository.findByCustomerNameContainingIgnoreCase(customerName));
-            model.addAttribute("searchTerm", customerName);
-        } else {
-            model.addAttribute("tickets", ticketRepository.findAllByOrderByCreatedAtDesc());
+    @PostMapping
+    public String createTicket(
+            @Valid @ModelAttribute("ticket") TicketCreateDto ticketCreateDto,
+            BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "ticket-form";
         }
-        model.addAttribute("pageTitle", "Поиск заявок");
-        return "tickets";
+
+        Ticket savedTicket = ticketService.createTicket(ticketCreateDto);
+        return "redirect:/tickets/" + savedTicket.getId() + "/success";
+    }
+
+    @GetMapping("/{id}/success")
+    public String showSuccessPage(@PathVariable Long id, Model model) {
+        Ticket ticket = ticketService.getTicketById(id);
+        model.addAttribute("ticket", ticket);
+        return "ticket-success";
     }
 }
