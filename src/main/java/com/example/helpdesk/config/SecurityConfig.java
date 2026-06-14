@@ -18,62 +18,57 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Разрешаем статические ресурсы
+                        // Статические ресурсы
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        // Разрешаем H2 Console для учебных целей
+                        // H2 Console
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
+
+                        // ВАЖНО: страница логина должна быть доступна всем
+                        .requestMatchers("/login").permitAll()
 
                         // Публичные GET страницы
                         .requestMatchers(HttpMethod.GET,
-                                "/", "/about", "/contacts", "/login",
+                                "/", "/about", "/contacts",
                                 "/tickets/new", "/tickets/*/success"
                         ).permitAll()
-                        // Публичный POST для создания заявки
+                        // Публичный POST
                         .requestMatchers(HttpMethod.POST, "/tickets").permitAll()
 
-                        // Админ-зона требует роль ADMIN
+                        // Админ-зона
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        // Все остальные запросы требуют аутентификации
+
+                        // ВСЕ остальные запросы требуют аутентификации
                         .anyRequest().authenticated()
                 )
-                // Отключаем CSRF для H2 Console
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers(PathRequest.toH2Console())
                 )
-                // Разрешаем фреймы для H2 Console
                 .headers(headers -> headers
                         .frameOptions(frame -> frame.sameOrigin())
                 )
-                // Настройка формы логина
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .loginProcessingUrl("/login")  // Явно указываем URL обработки
                         .defaultSuccessUrl("/admin/tickets", true)
+                        .failureUrl("/login?error=true")
                         .permitAll()
                 )
-                // Настройка выхода
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 );
 
-        // Добавляем страницу "Нет доступа" (опционально)
-        http.exceptionHandling(exception -> exception
-                .accessDeniedPage("/access-denied")
-        );
-
         return http.build();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        // Администратор
         UserDetails admin = User.withUsername("admin")
                 .password("{noop}admin")
                 .roles("USER", "ADMIN")
                 .build();
 
-        // Обычный пользователь
         UserDetails user = User.withUsername("user")
                 .password("{noop}user")
                 .roles("USER")
