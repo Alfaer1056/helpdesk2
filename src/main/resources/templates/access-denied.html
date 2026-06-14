@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Нет доступа | Help Desk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">Help Desk</a>
+        <div class="navbar-nav">
+            <a class="nav-link" th:href="@{/}">Главная</a>
+            <a class="nav-link" th:href="@{/tickets/new}">Создать заявку</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center p-5">
+                    <div class="display-1 text-warning">🚫</div>
+                    <h1 class="h3 mb-3">Доступ запрещён</h1>
+                    <p class="text-muted mb-4">
+                        У вас нет прав для просмотра администраторской зоны.
+                        Только пользователи с ролью <strong>ADMIN</strong> могут видеть список заявок.
+                    </p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a th:href="@{/}" class="btn btn-primary">На главную</a>
+                        <a th:href="@{/login}" class="btn btn-outline-secondary">Войти как администратор</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+</body>
+</html>
